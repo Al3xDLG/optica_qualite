@@ -9,6 +9,7 @@ import com.glasscode.oq.model.Cliente;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.glasscode.oq.core.ControllerCliente;
+import com.glasscode.oq.core.ControllerLogin;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
@@ -28,19 +29,31 @@ import java.util.List;
 @Path("cliente")
 public class RESTCliente {
     
-    @GET
+    @POST
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("filtro") @DefaultValue("") String filtro,
-                           @QueryParam("showDeleted") @DefaultValue("false") boolean showDeleted) {
+    public Response getAll(@FormParam("filtro") @DefaultValue("") String filtro,
+                           @FormParam("token") @DefaultValue("") String token,
+                           @FormParam("showDeleted") @DefaultValue("false") boolean showDeleted) {
         String out = null;
         ControllerCliente cc = null;
+        ControllerLogin cl = null;
         
         List<Cliente> clientes = null;
         try {
             cc = new ControllerCliente();
-            clientes = cc.getAll(filtro, showDeleted);
-            out = new Gson().toJson(clientes);
+            cl = new ControllerLogin();
+            
+            if (cl.validarToken(token)) {
+                clientes = cc.getAll(filtro, showDeleted);
+                out = new Gson().toJson(clientes);
+            }
+            else
+            {
+                out = "{\"errorsec\":\"Error al validar el token.\"}";
+            }
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
             out = "{\"exception\":\"Error interno del servidor.\"}";

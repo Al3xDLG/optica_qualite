@@ -2,6 +2,19 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/src/java/com/oq/glasscode/rest/RESTEmpleado.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_ventas/vista_ventas.html</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_venta_presupuesto_lc/vista_venta_presupuesto_lc.html</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_solucion/vista_solucion.html</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_cliente/controlador_cliente.js</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/js/main.js</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_empleado/controlador_empleado.js</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_venta_productos/controlador_venta_productos.js</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_venta_productos/vista_venta_productos.html</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/src/java/com/oq/glasscode/rest/RESTCliente.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/modulos/modulo_venta_presupuesto_lc/controlador_venta_presupuesto_lc.js</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/ProyectoWeb/ProyectoOptica/optica_qualite/web/js/gft/gft.js</file>
+        </group>
     </open-files>
 </project-private>
