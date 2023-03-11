@@ -10,9 +10,11 @@ import com.glasscode.oq.model.Empleado;
 import com.glasscode.oq.model.ExamenVista;
 import com.glasscode.oq.model.Graduacion;
 import com.glasscode.oq.model.Persona;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,17 +60,7 @@ public class ControllerExamenVista {
         System.out.println(sql);
 
         if (filtro != null && !filtro.trim().equals("")) {
-            pstmt.setString(1, "%"+filtro+"%");
-            pstmt.setString(2, "%"+filtro+"%");
-            pstmt.setString(3, "%"+filtro+"%");
-            pstmt.setString(4, "%"+filtro+"%");
-            pstmt.setString(5, "%"+filtro+"%");
-            pstmt.setString(6, "%"+filtro+"%");
-            pstmt.setString(7, "%"+filtro+"%");
-            pstmt.setString(8, "%"+filtro+"%");
-            pstmt.setString(9, "%"+filtro+"%");
-            pstmt.setString(10, "%"+filtro+"%");
-            pstmt.setString(11, "%"+filtro+"%");
+            pstmt.setString(1, filtro);
         }
 
         rs = pstmt.executeQuery();
@@ -122,5 +114,69 @@ public class ControllerExamenVista {
         ev.setEmpleado(e);
         
         return ev;
+    }
+    
+    public int insert(ExamenVista ev) throws Exception {
+        //Definimos la consulta SQL que invoca al Stored Procedure:
+        String sql = "{call insertarExamenVista(?, ?, ?, ?, ?, ?, ?," // Valores de ingreso
+                + "?, ?," //Id empleado y id cliente
+                + "?, ?, ?)}";  // Valores de Retorno
+
+        //Aquí guardaremos los ID's que se generarán:
+        // Banderas que nos permiten saber si se ha registrado los datos. Si no cambia su valor hay un problema con la generación de los ID
+        int idExamenVistaGenerado = -1;
+        int idGraduacionGenerado = -1;
+        String claveGenerada = "";
+        String fechaGenerada = "";
+
+        //Con este objeto nos vamos a conectar a la Base de Datos:
+        ConexionMySQL connMySQL = new ConexionMySQL();
+
+        //Abrimos la conexión con la Base de Datos:
+        Connection conn = connMySQL.open();
+
+        //Con este objeto invocaremos al StoredProcedure:
+        CallableStatement cstmt = conn.prepareCall(sql);
+
+        //Establecemos los parámetros de los datos personales en el orden
+        //en que los pide el procedimiento almacenado, comenzando en 1:
+        // Registramos los datos de entrada
+        cstmt.setDouble(1, ev.getGraduacion().getEsferaod());
+        cstmt.setDouble(2, ev.getGraduacion().getEsferaoi());
+        cstmt.setInt(3, ev.getGraduacion().getCilindrood());
+        cstmt.setInt(4, ev.getGraduacion().getCilindrooi());
+        cstmt.setInt(5, ev.getGraduacion().getEjeod());
+        cstmt.setInt(6, ev.getGraduacion().getEjeoi());
+        cstmt.setString(7, ev.getGraduacion().getDip());
+        cstmt.setInt(8, ev.getEmpleado().getIdEmpleado());
+        cstmt.setInt(9, ev.getCliente().getIdCliente());
+
+        //Registramos los parámetros de salida:
+        cstmt.registerOutParameter(10, Types.INTEGER); //idExamenVista
+        cstmt.registerOutParameter(11, Types.INTEGER); //idGraduacion
+        cstmt.registerOutParameter(12, Types.VARCHAR); //clave
+        cstmt.registerOutParameter(13, Types.VARCHAR); //fecha
+
+        //Ejecutamos el Stored Procedure:
+        cstmt.executeUpdate();
+
+        //Recuperamos los ID's generados:
+        idExamenVistaGenerado = cstmt.getInt(10);      // idProducto
+        idGraduacionGenerado = cstmt.getInt(11);     // idSolucion        
+        claveGenerada = cstmt.getString(12); // codigoBarrasGenerado
+        fechaGenerada = cstmt.getString(13); // codigoBarrasGenerado
+
+        // Asignamos los id´s generados al objeto ExamenVista
+        ev.setIdExamenVista(idExamenVistaGenerado);
+        ev.getGraduacion().setIdGraduacion(idGraduacionGenerado);
+        ev.setClave(claveGenerada);
+        ev.setFecha(fechaGenerada);
+        
+
+        cstmt.close();
+        connMySQL.close();
+
+        //Devolvemos el ID de Cliente generado:
+        return idExamenVistaGenerado;
     }
 }

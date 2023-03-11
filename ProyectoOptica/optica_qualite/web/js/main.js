@@ -8,6 +8,7 @@ let moduloTratamientos = null;
 let moduloMateriales = null;
 let moduloTipoMicas = null;
 let moduloVentaProductos = null;
+let moduloVentaPresupuestoLC = null;
 let home = null;
 
 // Cargar página de Inicio
@@ -123,6 +124,26 @@ function cargarModuloVentaProductos(){
                                 function (controller) {
                                     moduloVentaProductos = controller;
                                     moduloVentaProductos.inicializar();
+                                }
+                        );
+                    }
+            );
+}
+
+function cargarModuloVentaPresupuestoLC(){
+    fetch("modulos/modulo_venta_presupuesto_lc/vista_venta_presupuesto_lc.html")
+            .then(
+                    function (response) {
+                        return response.text();
+                    }
+            )
+            .then(
+                    function (html) {
+                        document.getElementById("layoutSidenav_content_producto").innerHTML = html;
+                        import("../modulos/modulo_venta_presupuesto_lc/controlador_venta_presupuesto_lc.js").then(
+                                function (controller) {
+                                    moduloVentaPresupuestoLC = controller;
+                                    moduloVentaPresupuestoLC.inicializar();
                                 }
                         );
                     }

@@ -1,6 +1,7 @@
 package com.oq.glasscode.rest;
 
 import com.glasscode.oq.core.ControllerLenteContacto;
+import com.glasscode.oq.core.ControllerLogin;
 import com.glasscode.oq.model.LenteContacto;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -18,19 +19,25 @@ import java.util.List;
 @Path("lentescontacto")
 public class RESTLentesContacto {
 
-    @GET
+    @POST
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("filtro") @DefaultValue("") String filtro,
-                           @QueryParam("showDeleted") @DefaultValue("false") boolean showDeleted) {
+    public Response getAll(@FormParam("filtro") @DefaultValue("") String filtro,
+            @FormParam("showDeleted") @DefaultValue("false") boolean showDeleted,
+            @FormParam("token") @DefaultValue("") String token) {
         String out = null;
         ControllerLenteContacto clc = null;
+        ControllerLogin cl = null;
 
         List<LenteContacto> lcs = null;
         try {
-            clc = new ControllerLenteContacto();
-            lcs = clc.getAll(filtro, showDeleted);
-            out = new Gson().toJson(lcs);
+            cl = new ControllerLogin();
+            if (cl.validarToken(token)) {
+                clc = new ControllerLenteContacto();
+                lcs = clc.getAll(filtro,showDeleted);
+                out = new Gson().toJson(lcs);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             out = """
