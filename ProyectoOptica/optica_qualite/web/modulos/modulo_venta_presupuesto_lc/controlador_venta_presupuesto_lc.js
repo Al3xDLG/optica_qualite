@@ -9,6 +9,7 @@ const header = document.getElementById("headerLentesDeContacto");
 console.log(header);
 const tbl = document.getElementById('tablaClientes');
 console.log(tbl);
+console.log("Hola");
 export function inicializar() {
     buscarCliente();
     buscarLC();
