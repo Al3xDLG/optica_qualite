@@ -2,7 +2,6 @@
     <!-- Inicio de contenido-->
     <div class="container-fluid px-4">
         <p class="h2 text-bold bg-transparent mt-2 border-0">Ventas de lentes de contacto</p>
-
         <!-- Inicio migajas de Pan y botón-->
         <div class="row container-md justify-content-between">
             <nav class="col-md-6 my-1"" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -112,7 +111,7 @@
                         </div>
                         <label class="form-label" for="SelectEV">Examen de la vista </label>
                         <select class="form-select" name="selectEV" id="selectEV">
-                            <option value="SeleccionarCliente" selected="" disabled="">Selecciona primero un cliente</option>
+                            <option value="seleccionarExamen" selected="" disabled="">Selecciona primero un cliente</option>
                         </select>
 
                     </div>
@@ -198,7 +197,7 @@
                                     </div>
                                 </div><!-- Fin de la zona de botones -->
                             </div> <!-- Fin del formulario -->
-                            <div class="table-responsive" id="tblPresupuesto">
+                            <div class="table-responsive" id="tblPresupuestoLC">
                                 <table class="table">
                                     <thead style="background-color: #bc116b; color: white">
                                         <tr>
@@ -210,7 +209,7 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tblVentaPresupuesto">
+                                    <tbody id="tblVentaPresupuestoLC">
                                     </tbody>
                                 </table>
                             </div>
@@ -234,7 +233,7 @@
 
                             </div>
                             <div class="col-sm-6 mr-auto">
-                                <input type="text" id="totalProductos" name="totalProductos" disabled>
+                                <input type="text" id="totalLC" name="totalLC" disabled>
                             </div>
                         </div>
                         <div class="row">
@@ -276,7 +275,7 @@
         <div class="row">
             <div class="col-6 mt-2 mb-2">
                 <button class="btn btn-outline-success btn-lg w-75" id="btnSave" 
-                        onclick="moduloVentaPrespuestoLC.agregarCompra();"><i class="fa-solid fa-floppy-disk"></i> Guardar
+                        onclick="moduloVentaPrespuestoLC.agregarVentaPresupuestoLC();"><i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
             </div>
             <div class="col-6 mt-2 mb-2">
