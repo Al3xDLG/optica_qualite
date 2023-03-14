@@ -4,6 +4,7 @@ public class PresupuestoLentesdeContacto {
     private int idPrespuestoLentesContacto;
     private ExamenVista examenVista;
     private LenteContacto lenteContacto;
+    private Presupuesto presupuesto;
     private String clave;
     
     public PresupuestoLentesdeContacto(){
