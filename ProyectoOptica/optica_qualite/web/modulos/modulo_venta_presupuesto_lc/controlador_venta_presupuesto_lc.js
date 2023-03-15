@@ -370,7 +370,7 @@ export function agregarVentaPresupuestoLC()
         console.log(empleadoVenta);
         let venta = {
             idVenta: null,
-            empleado: empleado,
+            empleado: empleadoVenta,
             clave: ""
         };
         let ventaProducto = [];
