@@ -2,7 +2,7 @@ package com.glasscode.oq.model;
 
 public class VentaPresupuesto {
     private Venta venta;
-    private Presupuesto presupuesto;
+    private PresupuestoLentesdeContacto presupuestoLC;
     private int cantidad;
     private Double precioUnitario;
     private Double descuento;
@@ -11,9 +11,9 @@ public class VentaPresupuesto {
         
     }
 
-    public VentaPresupuesto(Venta venta, Presupuesto presupuesto, int cantidad, Double precioUnitario, Double descuento) {
+    public VentaPresupuesto(Venta venta, PresupuestoLentesdeContacto presupuestoLC, int cantidad, Double precioUnitario, Double descuento) {
         this.venta = venta;
-        this.presupuesto = presupuesto;
+        this.presupuestoLC = presupuestoLC;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
         this.descuento = descuento;
@@ -29,12 +29,12 @@ public class VentaPresupuesto {
         this.venta = venta;
     }
 
-    public Presupuesto getPresupuesto() {
-        return presupuesto;
+    public PresupuestoLentesdeContacto getPresupuestoLC() {
+        return presupuestoLC;
     }
 
-    public void setPresupuesto(Presupuesto presupuesto) {
-        this.presupuesto = presupuesto;
+    public void setPresupuestoLC(PresupuestoLentesdeContacto presupuestoLC) {
+        this.presupuestoLC = presupuestoLC;
     }
 
     public int getCantidad() {

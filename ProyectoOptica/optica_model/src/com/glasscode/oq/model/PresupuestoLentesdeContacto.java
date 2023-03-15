@@ -42,5 +42,13 @@ public class PresupuestoLentesdeContacto {
     public void setClave(String clave) {
         this.clave = clave;
     }
+
+    public Presupuesto getPresupuesto() {
+        return presupuesto;
+    }
+
+    public void setPresupuesto(Presupuesto presupuesto) {
+        this.presupuesto = presupuesto;
+    }
        
 }
