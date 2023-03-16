@@ -47,7 +47,7 @@
                                 <div class="col-sm-6 col-md-6 mt-2 mb-2">
                                     <button class="btn btn-outline-primary btn-lg w-75" id="btnBuscarClientes" 
                                             data-toggle="collapse" data-target="#collapseClientes" aria-expanded="false" aria-controls="collapseClientes"
-                                            onclick="moduloVentaPresupuestoLC.mostrarCampoBusquedaClientes();"><i class="fa-solid fa-magnifying-glass"></i> Buscar
+                                            onclick="moduloVentaPrespuestoLentes.mostrarCampoBusquedaClientes();"><i class="fa-solid fa-magnifying-glass"></i> Buscar
                                     </button>
                                 </div>
                             </div> <!--Fin de zona de búsqueda y filtro-->
@@ -129,19 +129,13 @@
                             <div class="col-md-6 my-3">
                                 <button type="button" id="letreroFormulario" 
                                         class="btn btn-outline-dark" 
-                                        onclick="moduloVentaPresupuestoLC.setDetalleVisible();">
+                                        onclick="moduloVentaPrespuestoLentes.setDetalleVisible();">
                                     Agregar.
                                 </button>
                             </div>
                             <div class="container-fluid m-0" id="areaContenido" style="display: none;">
                                 <form id="formSolucion" name="formSolucion">
                                     <div class="list-group list-group-flush border-0 container-md">
-                                        <!-- Inicio de dentificadores -->
-                                        <li class="list-group-item border-0">
-                                            <input type="text" id="txtCodigoBarras" name="txtCodigoBarras" hidden value="">
-                                            <input type="text" id="txtIdSolucion" name="txtIdSolucion" hidden value="">
-                                            <input type="text" id="txtIdProducto" name="txtIdProducto" hidden value="">
-                                        </li> <!-- Fin de dentificadores -->
 
                                         <!-- Inicio de datos del solución -->
                                         <li class="list-group-item border-0 container-sm">
@@ -155,25 +149,35 @@
                                                 <div class="card-body bg-warningDatos border-0 row justify-content-center">
                                                     <!-- Nombre -->
                                                     <div class="col-sm-4 elementoForm">
-                                                        <label for="selectLC" class="form-label">Lente de Contacto:</label>
-                                                        <select class="form-select" name="selectLC" id="selectLC">
-                                                            <option value="SeleccionarLC" selected="" disabled="">Selecciona el lente de contacto</option>
+                                                        <label for="txtAlturaOblea" class="form-label">Altura de la oblea:</label>
+                                                        <input type="number" id="txtAlturaOblea" name="txtAlturaOblea" class="form-control" minlength="2" required>
+                                                    </div>
+                                                    <div class="col-sm-4 elementoForm">
+                                                        <label for="selectMica" class="form-label">Tipo de mica:</label>
+                                                        <select class="form-select" name="selectMica" id="selectMica">
+                                                            <option value="SeleccionarMica" selected="" disabled="">Selecciona la mica
+                                                            </option>
                                                         </select>
                                                     </div>
                                                     <!-- Marca -->
                                                     <div class="col-sm-4 elementoForm">
-                                                        <label for="txtPrecioUnitario" class="form-label">Precio Unitario:</label>
-                                                        <input type="text" id="txtPrecioUnitario" name="txtPrecioUnitario" class="form-control" minlength="2" disabled required>
+                                                        <label for="selectMaterial" class="form-label">Material:</label>
+                                                        <select class="form-select" name="selectMaterial" id="selectMaterial">
+                                                            <option value="SeleccionarMaterial" selected="" disabled="">Selecciona el material
+                                                            </option>
+                                                        </select>
                                                     </div>
                                                     <!-- Precio de compra -->
                                                     <div class="col-sm-4 elementoForm">
-                                                        <label for="txtCantidad" class="form-label">Cantidad:</label>
-                                                        <input type="number" min="1" step="0.01" id="txtCantidad" name="txtCantidad" class="form-control" placeholder="Ingresar cantidad" required="" disabled>
+                                                        <label for="selectLC" class="form-label">Armazon:</label>
+                                                        <select class="form-select" name="selectArmazon" id="selectArmazon">
+                                                            <option value="SeleccionarArmazon" selected="" disabled="">Selecciona el armazon
+                                                            </option>
+                                                        </select>
                                                     </div>
                                                     <!-- Existencias -->
-                                                    <div class="col-sm-3 elementoForm">
-                                                        <label for="txtDescuento" class="form-label" >Descuento:</label>
-                                                        <input type="number" min="1" step="1" class="form-control" id="txtDescuento" name="txtDescuento" placeholder="Ingresar descuento" disabled required>
+                                                    <div class="col-sm-12 elementoForm" id="divMateriales">
+                                                        <label for="Tratamientos" class="form-label" >Tratamientos:</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -185,19 +189,19 @@
                                 <div class="card container-fluid bg-transparent justify-content-center py-3">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-6 mb-3">
-                                            <button class="btn btn-outline-success btn-lg" id="btnSaveLC" 
-                                                    onclick="moduloVentaPresupuestoLC.guardarLC();">Guardar
+                                            <button class="btn btn-outline-success btn-lg" id="btnSaveLentes" 
+                                                    onclick="moduloVentaPrespuestoLentes.guardarPresupuesto();">Guardar
                                             </button>
                                         </div>
                                         <div class="col-sm-6 mb-3">
-                                            <button class="btn btn-outline-primary btn-lg" id="btnCleanLC" 
-                                                    onclick="moduloVentaPresupuestoLC.limpiarCamposLC();">Limpiar
+                                            <button class="btn btn-outline-primary btn-lg" id="btnCleanLentes" 
+                                                    onclick="moduloVentaPrespuestoLentes.limpiarCamposPresupuesto();">Limpiar
                                             </button>
                                         </div>
                                     </div>
                                 </div><!-- Fin de la zona de botones -->
                             </div> <!-- Fin del formulario -->
-                            <div class="table-responsive" id="tblPresupuestoLC">
+                            <div class="table-responsive" id="tblPresupuestoLentes">
                                 <table class="table">
                                     <thead style="background-color: #bc116b; color: white">
                                         <tr>
@@ -209,7 +213,7 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tblVentaPresupuestoLC">
+                                    <tbody id="tblVentaPresupuestoLentes">
                                     </tbody>
                                 </table>
                             </div>
@@ -233,7 +237,7 @@
 
                             </div>
                             <div class="col-sm-6 mr-auto">
-                                <input type="text" id="totalLC" name="totalLC" disabled>
+                                <input type="text" id="totalLentes" name="totalLentes" disabled>
                             </div>
                         </div>
                         <div class="row">
@@ -275,12 +279,12 @@
         <div class="row">
             <div class="col-6 mt-2 mb-2">
                 <button class="btn btn-outline-success btn-lg w-75" id="btnSave" 
-                        onclick="moduloVentaPrespuestoLC.agregarVentaPresupuestoLC();"><i class="fa-solid fa-floppy-disk"></i> Guardar
+                        onclick="moduloVentaPrespuestoLentes.agregarVentaPresupuestoLentes();"><i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
             </div>
             <div class="col-6 mt-2 mb-2">
                 <button class="btn btn-outline-primary btn-lg w-75" id="btnClean" 
-                        onclick="moduloVentaPrespuestoLC.limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar
+                        onclick="moduloVentaPrespuestoLentes.limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar
                 </button>
             </div>
         </div>

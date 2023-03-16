@@ -1,10 +1,12 @@
-let lentesDeContactoSeleccionado;
-let lentesDeContactoEnCompra = [];
-let lentesDeContacto;
+let armazonSeleccionado;
+let DetalleVentaPresupuestoLentes = [];
 let clientes;
+let tiposMica;
+let materiales;
+let tratamientos;
 let examenesVista;
 let clienteSeleccionado;
-let lenteDeContacto;
+let armazones;
 const header = document.getElementById("headerLentesDeContacto");
 console.log(header);
 const tbl = document.getElementById('tablaClientes');
@@ -12,13 +14,13 @@ console.log(tbl);
 console.log("Hola");
 export function inicializar() {
     buscarCliente();
-    buscarLC();
+    buscarArmazon();
     mostrarCampoBusquedaClientes();
     document.getElementById("btnClean").disabled = true;
     document.getElementById("btnSave").disabled = true;
 
-    document.getElementById("btnCleanLC").disabled = true;
-    document.getElementById("btnSaveLC").disabled = true;
+    document.getElementById("btnCleanLentes").disabled = true;
+    document.getElementById("btnSaveLentes").disabled = true;
     configureTableFilter(document.getElementById('txtBusquedaClientes'),
             tbl);
 }
@@ -37,7 +39,7 @@ export function mostrarCampoBusquedaClientes()
 
 export function setDetalleVisible() {
     const form = document.getElementById("areaContenido");
-    let tbl = document.getElementById("tblPresupuestoLC");
+    let tbl = document.getElementById("tblPresupuestoLentes");
     if (form.style.display == "none") {
         form.style.display = "block";
         document.getElementById("letreroFormulario").innerHTML = "Cerrar.";
@@ -244,7 +246,26 @@ export function buscarEV()
                 cargarEV(data);
             });
 }
-export function buscarLC()
+
+export function cargarEV(data)
+{
+    examenesVista = data;
+    console.log(examenesVista);
+    let select = document.getElementById("selectEV");
+    let options = select.getElementsByTagName('option');
+    for (var i = 0; i < options.length; i++) {
+        select.removeChild(options[i]);
+        i--;
+    }
+    let contenido = "<option value='seleccionarExamen' selected='' disabled=''>Selecciona el examen de vista</option>";
+    examenesVista.forEach(function (ev, index) {
+        let registro = "<option value='" + index + "'>" + ev.clave + "</option>";
+        contenido += registro;
+    });
+    select.innerHTML = contenido;
+}
+
+export function buscarArmazon()
 {
     let param = null;
     let lastToken = localStorage.getItem("lastToken");
@@ -253,7 +274,7 @@ export function buscarLC()
         token: lastToken
     };
     param = new URLSearchParams(datos);
-    fetch("api/lentescontacto/getAll",
+    fetch("api/armazon/getAll",
             {
                 method: "POST",
                 headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
@@ -297,69 +318,30 @@ export function buscarLC()
                     });
                     return;
                 }
-                console.log("cargando examenes vista...");
+                console.log("cargando armazones...");
                 console.log(data);
-                cargarLC(data);
+                cargarArmazones(data);
             });
 }
-export function cargarEV(data)
+
+export function cargarArmazones(data)
 {
-    examenesVista = data;
-    console.log(examenesVista);
-    let select = document.getElementById("selectEV");
+    armazones = data;
+    let select = document.getElementById("selectArmazones");
     let options = select.getElementsByTagName('option');
     for (var i = 0; i < options.length; i++) {
         select.removeChild(options[i]);
         i--;
     }
-    let contenido = "<option value='seleccionarExamen' selected='' disabled=''>Selecciona el examen de vista</option>";
-    examenesVista.forEach(function (ev, index) {
-        let registro = "<option value='" + index + "'>" + ev.clave + "</option>";
+    let contenido = "<option value='SeleccionarArmazon' selected='' disabled=''>Selecciona el armazon</option>";
+    armazones.forEach(function (armazon, index) {
+        let registro = "<option value='" + index + "'>" + armazon.producto.nombre + "</option>";
         contenido += registro;
     });
     select.innerHTML = contenido;
 }
 
-
-export function cargarLC(data)
-{
-    lentesDeContacto = data;
-    let select = document.getElementById("selectLC");
-    let options = select.getElementsByTagName('option');
-    for (var i = 0; i < options.length; i++) {
-        select.removeChild(options[i]);
-        i--;
-    }
-    let contenido = "<option value='SeleccionarLC' selected='' disabled=''>Selecciona el lente de contacto</option>";
-    lentesDeContacto.forEach(function (lc, index) {
-        let registro = "<option value='" + index + "' onclick='moduloVentaPresupuestoLC.cargarDatosLC(" + index + ");'>" + lc.producto.nombre + "</option>";
-        contenido += registro;
-    });
-    select.innerHTML = contenido;
-}
-
-export function seleccionarLC(index) { //seleccionarProducto
-    lenteDeContactoSeleccionado = lentesDeContacto[index];
-    let enCarrito = false;
-    lentesDeContactoEnCompra.forEach(function (lc, index) {
-        if (lc == lenteDeContactoSeleccionado) {
-            enCarrito = true;
-            return;
-        }
-    });
-    if (enCarrito) {
-        Swal.fire('', 'Producto ya en carrito.', 'warning');
-        setDetalleVisible(true);
-        actualizarTablaVenta();
-    } else {
-        lentesDeContactoEnCompra.push(lenteDeContactoSeleccionado);
-        setDetalleVisible(true);
-        actualizarTablaVenta();
-    }
-
-}
-
-export function agregarVentaPresupuestoLC()
+export function agregarVentaPresupuestoLentes()
 {
 
     if (validarDescuento() && validarExistencias()) {
@@ -374,7 +356,7 @@ export function agregarVentaPresupuestoLC()
             clave: ""
         };
         let ventaProducto = [];
-        lentesDeContactoEnCompra.forEach(function (producto, index)
+        armazones.forEach(function (producto, index)
         {
             let ventaProduct = new Object();
             ventaProduct.producto = producto;
@@ -435,76 +417,74 @@ export function agregarVentaPresupuestoLC()
                     limpiar();
                     actualizarTablaVenta();
                     actualizarBotones();
-                    lentesDeContactoEnCompra.splice(0, lentesDeContactoEnCompra.length);
+                    armazones.splice(0, armazones.length);
                 });
     }
 }
 
-export function eliminarLC(index) { //seleccionarProducto
-    lentesDeContactoEnCompra.splice(index, 1);
+export function eliminarPresupuesto(index) { //seleccionarProducto
+    DetalleVentaPresupuestoLentes.splice(index, 1);
     console.log("Checar");
-    console.log(lentesDeContactoEnCompra);
+    console.log(DetalleVentaPresupuestoLentes);
     actualizarTablaLC();
 }
 
-export function guardarLC()
+export function guardarPresupuesto()
 {
-    lentesDeContactoEnCompra.push(lentesDeContacto[document.getElementById("selectLC").value]);
-    actualizarTablaLC();
-    limpiarCamposLC();
-
-}
-
-export function cargarDatosLC(index)
-{
-    lentesDeContactoSeleccionado = lentesDeContacto[index];
-
-    let enCarrito = false;
-    lentesDeContactoEnCompra.forEach(function (lc, index)
-    {
-        if (lc == lentesDeContactoSeleccionado) {
-            enCarrito = true;
-            return;
-        }
-    });
-    if (enCarrito) {
-        Swal.fire('', 'Producto ya en carrito.', 'warning');
-        setDetalleVisible(true);
-        limpiarCamposLC();
-        actualizarTablaLC();
-    } else {
-        document.getElementById("txtPrecioUnitario").value = lentesDeContactoSeleccionado.producto.precioVenta;
-        document.getElementById("txtCantidad").max = lentesDeContactoSeleccionado.producto.existencias;
-        document.getElementById("txtDescuento").max = 100;
-
-        document.getElementById("txtCantidad").value = 1;
-        document.getElementById("txtDescuento").value = 0;
-
-        document.getElementById("btnSaveLC").disabled = false;
-        document.getElementById("btnCleanLC").disabled = false;
+    let alturaOblea = document.getElementById("txtAlturaOblea").value;
+    let tipoMica = tiposMica[document.getElementById("selectMica").value];
+    let tratamientosSeleccionados = [];
+    let listaTratamientos = document.getElementsByName("chbTratamiento");
+    for (var tratamiento in listaTratamientos) {
+        if (tratamiento.checked) {
+            tratamientosSeleccionados.push(tratamientos[tratamiento.value]);        }
     }
-
+    let material = materiales[document.getElementById("selectMaterial").value];
+    
+    let presupuesto =
+            {
+                idPresupuesto = 0,
+                clave: "",
+                examenVista: examenesVista[document.getElementById("selectEV").value]
+            };
+    let presupuestoLentes =
+            {
+                idPresupuestoLentes: 0,
+                tipoMica: tipoMica,
+                material: material,
+                tratamientos: listaTratamientos,
+                alturaOblea: alturaOblea,
+                armazon: armazonSeleccionado,
+                presupuesto: presupuesto
+            };
+    DetalleVentaPresupuestoLentes.push(presupuestoLentes);
+    actualizarTablaPresupuesto();
+    limpiarCamposPresupuesto();
 
 }
-
-export function limpiarCamposLC()
+export function limpiarCamposPresupuesto()
 {
-    document.getElementById("selectLC").value = "SeleccionarLC";
-    document.getElementById("txtCantidad").value = "";
-    document.getElementById("txtDescuento").value = "";
+    document.getElementById("selectArmazon").value = "SeleccionarArmazon";
+    document.getElementById("selectMaterial").value = "SeleccionarMaterial";
+    document.getElementById("selectMica").value = "SeleccionarMica";
+    document.getElementById("selectTratamiento").value = "SeleccionarTratamiento";
+    let tratamientos = document.getElementsByName("chbTratamiento");
+    for (var tratamiento in tratamientos) {
+        tratamiento.checked = false;
+    }
     document.getElementById("txtPrecioUnitario").value = "";
 
     document.getElementById("txtCantidad").disabled = true;
     document.getElementById("txtDescuento").disabled = true;
 
-    document.getElementById("btnSaveLC").disabled = true;
-    document.getElementById("btnCleanLC").disabled = true;
+    document.getElementById("btnSavePresupuesto").disabled = true;
+    document.getElementById("btnCleanPresupuesto").disabled = true;
 }
 
 export function limpiar()
 {
-    console.log(lentesDeContactoEnCompra);
-    lentesDeContactoEnCompra.splice(0, lentesDeContactoEnCompra.length);
+    console.log(armazones);
+    armazones.splice(0, armazones.length);
     actualizarTablaVenta();
     clienteSeleccionado = null;
     cargarClienteSeleccionado();
@@ -520,10 +500,10 @@ export function limpiar()
  */
 export function actualizarBotones()
 {
-    if (clienteSeleccionado != null || lentesDeContactoEnCompra[0] != null || document.getElementById("selectEV").value != "seleccionaExamen")
+    if (clienteSeleccionado != null || DetalleVentaPresupuestoLentes[0] != null || document.getElementById("selectEV").value != "seleccionaExamen")
     {
         document.getElementById("btnClean").disabled = false;
-        if (clienteSeleccionado != null && lentesDeContactoEnCompra[0] != null && document.getElementById("selectEV").value != "seleccionaExamen") {
+        if (clienteSeleccionado != null && armazones[0] != null && document.getElementById("selectEV").value != "seleccionaExamen") {
             document.getElementById("btnSave").disabled = false;
         }
     } else
@@ -543,23 +523,23 @@ export function actualizarBotones()
  * registrados en la optica
  * @returns {undefined}
  */
-export function actualizarTablaLC()
+export function actualizarTablaPresupuestoLentes()
 {
     let contenido = "";
-    if (lentesDeContactoEnCompra[0] != null) {
-        lentesDeContactoEnCompra.forEach(function (lc, index) {
+    if (DetalleVentaPresupuestoLentes[0] != null) {
+        DetalleVentaPresupuestoLentes.forEach(function (armazon, index) {
             let registro =
                     "<tr>" +
-                    "<td>" + lc.producto.codigoBarras + "</td>" +
-                    "<td>" + lc.producto.nombre + "</td>" +
-                    "<td> $" + lc.producto.precioVenta + "</td>" +
-                    "<td> <input type='number' id='cantidadLC" + index + "' value='1' name='cantidadLC" + index + "' oninput='moduloVentaPresupuestoLC.actualizarTotalVenta();'  min='1' max='" + lc.producto.existencias + "'></td>" +
-                    "<td> <input type='number' id='descuentoLC" + index + "' value='0' name='descuentoLC" + index + "' oninput='moduloVentaPresupuestoLC.actualizarTotalVenta();' max='100'</td>" +
+                    "<td>" + armazon.producto.codigoBarras + "</td>" +
+                    "<td>" + armazon.producto.nombre + "</td>" +
+                    "<td> $" + armazon.producto.precioVenta + "</td>" +
+                    "<td> <input type='number' id='cantidadLente" + index + "' value='1' name='cantidadLente" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();'  min='1' max='" + armazon.producto.existencias + "'></td>" +
+                    "<td> <input type='number' id='descuentoLente" + index + "' value='0' name='descuentoLente" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();' max='100'</td>" +
                     "<td><a onclick='moduloVentaPresupuestoLC.eliminarLC(" + index + ");'><i class='fa-sharp fa-solid fa-trash'></i></a></td></tr>";
             contenido += registro;
         });
-        console.log(lentesDeContactoEnCompra);
-        document.getElementById("tblVentaPresupuestoLC").innerHTML = contenido;
+        console.log(armazones);
+        document.getElementById("tblVentaPresupuestoLentes").innerHTML = contenido;
         document.getElementById("totalVenta").style.display = "block";
         actualizarBotones();
         actualizarTotalVenta();
@@ -580,7 +560,7 @@ export function actualizarTotalVenta()
         let descuento = 0;
         let totalLC = 0;
         let porcentaje;
-        lentesDeContactoEnCompra.forEach(function (lc, index) {
+        armazones.forEach(function (lc, index) {
             porcentaje = 0;
             totalLC += parseInt(document.getElementById("cantidadLC" + index + "").value);
             subtotalVenta += (lc.producto.precioVenta * document.getElementById("cantidadLC" + index + "").value);
@@ -704,7 +684,7 @@ export function actualizarTotalVenta()
 
 export function validarExistencias() {
     let valid = true;
-    lentesDeContactoEnCompra.forEach(function (lc, index) {
+    armazones.forEach(function (lc, index) {
         let id = document.getElementById("cantidadLC" + index + "");
         let existencias = parseInt(id.value);
         if (!Number.isInteger(existencias)) {
@@ -725,7 +705,7 @@ export function validarExistencias() {
 
 export function validarDescuento() {
     let valid = true;
-    lentesDeContactoEnCompra.forEach(function (lc, index) {
+    armazones.forEach(function (lc, index) {
         let id = document.getElementById("descuentoLC" + index);
         let descuento = parseFloat(id.value);
         if (Number.isNaN(descuento)) {
