@@ -9,6 +9,7 @@ let moduloMateriales = null;
 let moduloTipoMicas = null;
 let moduloVentaProductos = null;
 let moduloVentaPresupuestoLC = null;
+let moduloVentaPresupuestoLentes = null;
 let home = null;
 
 // Cargar página de Inicio
@@ -149,6 +150,27 @@ function cargarModuloVentaPresupuestoLC(){
                     }
             );
 }
+
+function cargarModuloVentaPresupuestoLentes(){
+    fetch("modulos/modulo_venta_presupuesto_lentes/vista_venta_presupuesto_lentes.html")
+            .then(
+                    function (response) {
+                        return response.text();
+                    }
+            )
+            .then(
+                    function (html) {
+                        document.getElementById("layoutSidenav_content_producto").innerHTML = html;
+                        import("../modulos/modulo_venta_presupuesto_lentes/controlador_venta_presupuesto_lentes.js").then(
+                                function (controller) {
+                                    moduloVentaPresupuestoLentes = controller;
+                                    moduloVentaPresupuestoLentes.inicializar();
+                                }
+                        );
+                    }
+            );
+}
+
 
 // Cargar página de Armazones
 function cargarModuloArmazones() {

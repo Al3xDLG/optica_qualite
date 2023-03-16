@@ -1,17 +1,17 @@
 package com.glasscode.oq.model;
 
-public class VentaPresupuesto {
+public class VentaPresupuestoLC {
     private Venta venta;
     private PresupuestoLentesdeContacto presupuestoLC;
     private int cantidad;
     private Double precioUnitario;
     private Double descuento;
     
-    public VentaPresupuesto(){
+    public VentaPresupuestoLC(){
         
     }
 
-    public VentaPresupuesto(Venta venta, PresupuestoLentesdeContacto presupuestoLC, int cantidad, Double precioUnitario, Double descuento) {
+    public VentaPresupuestoLC(Venta venta, PresupuestoLentesdeContacto presupuestoLC, int cantidad, Double precioUnitario, Double descuento) {
         this.venta = venta;
         this.presupuestoLC = presupuestoLC;
         this.cantidad = cantidad;

@@ -10,16 +10,16 @@ import java.util.List;
  *
  * @author Lenovo
  */
-public class DetalleVPre {
+public class DetalleVPreLC {
     private Venta venta;
-    private List<VentaPresupuesto> listaVPre;
+    private List<VentaPresupuestoLC> ventaPresupuesto;
 
-    public DetalleVPre() {
+    public DetalleVPreLC() {
     }
 
-    public DetalleVPre(Venta venta, List<VentaPresupuesto> listaVPre) {
+    public DetalleVPreLC(Venta venta, List<VentaPresupuestoLC> listaVPre) {
         this.venta = venta;
-        this.listaVPre = listaVPre;
+        this.ventaPresupuesto = listaVPre;
     }
 
     public Venta getVenta() {
@@ -30,24 +30,24 @@ public class DetalleVPre {
         this.venta = venta;
     }
 
-    public List<VentaPresupuesto> getListaVPre() {
-        return listaVPre;
+    public List<VentaPresupuestoLC> getVentaPresupuesto() {
+        return ventaPresupuesto;
     }
 
-    public void setListaVPre(List<VentaPresupuesto> listaVPre) {
-        this.listaVPre = listaVPre;
+    public void setVentaPresupuesto(List<VentaPresupuestoLC> ventaPresupuesto) {
+        this.ventaPresupuesto = ventaPresupuesto;
     }
 
     @Override
     public String toString() {
         String mensaje="";
-        for (VentaPresupuesto listaPresupuesto : listaVPre) {
+        for (VentaPresupuestoLC listaPresupuesto : ventaPresupuesto) {
             mensaje += listaPresupuesto.toString();
         }
         StringBuilder sb = new StringBuilder();
         sb.append("DetalleVPre{");
         sb.append("venta=").append(venta);
-        sb.append(", listaVPre=").append(listaVPre);
+        sb.append(", listaVPre=").append(ventaPresupuesto);
         sb.append('}');
         return sb.toString();
     }

@@ -2,11 +2,20 @@ package com.glasscode.oq.model;
 
 public class Presupuesto {
     private int idPresupuesto;
-    private int idExamenVista;
+    private ExamenVista examenVista;
+    private String clave;
     
     public Presupuesto(){
         
     }
+
+    public Presupuesto(int idPresupuesto, ExamenVista examenVista, String clave) {
+        this.idPresupuesto = idPresupuesto;
+        this.examenVista = examenVista;
+        this.clave = clave;
+    }
+    
+    
 
     public int getIdPresupuesto() {
         return idPresupuesto;
@@ -16,13 +25,20 @@ public class Presupuesto {
         this.idPresupuesto = idPresupuesto;
     }
 
-    public int getIdExamenVista() {
-        return idExamenVista;
+    public ExamenVista getExamenVista() {
+        return examenVista;
     }
 
-    public void setIdExamenVista(int idExamenVista) {
-        this.idExamenVista = idExamenVista;
+    public void setExamenVista(ExamenVista examenVista) {
+        this.examenVista = examenVista;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
     
-    
-    }
+}
