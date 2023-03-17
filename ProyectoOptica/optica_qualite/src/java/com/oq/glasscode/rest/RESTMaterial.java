@@ -26,10 +26,10 @@ import java.util.List;
 @Path("material")
 public class RESTMaterial {
 
-    @GET
+    @POST
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("filtro") @DefaultValue("") String filtro) {
+    public Response getAll(@FormParam("filtro") @DefaultValue("") String filtro) {
         String out = null;
         ControllerMaterial cm = null;
         List<Material> materiales = null;

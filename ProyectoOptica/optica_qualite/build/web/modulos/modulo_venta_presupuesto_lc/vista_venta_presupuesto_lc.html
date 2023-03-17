@@ -111,7 +111,7 @@
                         </div>
                         <label class="form-label" for="SelectEV">Examen de la vista </label>
                         <select class="form-select" name="selectEV" id="selectEV">
-                            <option value="seleccionarExamen" selected="" disabled="">Selecciona primero un cliente</option>
+                            <option value="seleccionarExamen" onselect="moduloVentaPresupuestoLC.actualizarBotones();" selected="" disabled="">Selecciona primero un cliente</option>
                         </select>
 
                     </div>
@@ -275,12 +275,12 @@
         <div class="row">
             <div class="col-6 mt-2 mb-2">
                 <button class="btn btn-outline-success btn-lg w-75" id="btnSave" 
-                        onclick="moduloVentaPrespuestoLC.agregarVentaPresupuestoLC();"><i class="fa-solid fa-floppy-disk"></i> Guardar
+                        onclick="moduloVentaPresupuestoLC.agregarVentaPresupuestoLC();"><i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
             </div>
             <div class="col-6 mt-2 mb-2">
                 <button class="btn btn-outline-primary btn-lg w-75" id="btnClean" 
-                        onclick="moduloVentaPrespuestoLC.limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar
+                        onclick="moduloVentaPresupuestoLC.limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar
                 </button>
             </div>
         </div>

@@ -132,7 +132,8 @@ export function cargarClientes(data)
 
 export function cargarClienteSeleccionado()
 {
-    let registro =
+    if (clienteSeleccionado != null) {
+        let registro =
             "<tr>" +
             "<td>" + clienteSeleccionado.numeroUnico + "</td>" +
             "<td>" + clienteSeleccionado.persona.nombre + "</td>" +
@@ -141,6 +142,8 @@ export function cargarClienteSeleccionado()
             "<td>" + clienteSeleccionado.persona.telMovil + "</td>" +
             "<td>" + clienteSeleccionado.persona.email + "</td>";
     document.getElementById("tblClienteSeleccionado").innerHTML = registro;
+    }else
+        document.getElementById("tblClienteSeleccionado").innerHTML = "";
 }
 
 export function seleccionarCliente(index)
@@ -367,36 +370,58 @@ export function agregarVentaPresupuestoLC()
         let param = null;
         //let url = "api/empleado/getAll?token=" + currentUser.usuario.lastToken;}
         let empleadoVenta = JSON.parse(localStorage.getItem("empleado"));
+        let timestamp = new Date().valueOf();
         console.log(empleadoVenta);
         let venta = {
             idVenta: null,
             empleado: empleadoVenta,
-            clave: ""
+            clave: "OQ-V-"+timestamp
         };
-        let ventaProducto = [];
-        lentesDeContactoEnCompra.forEach(function (producto, index)
-        {
-            let ventaProduct = new Object();
-            ventaProduct.producto = producto;
-            ventaProduct.precioUnitario = producto.precioVenta;
-            ventaProduct.cantidad = document.getElementById("cantidadProducto" + index + "").value;
-            ventaProduct.descuento = document.getElementById("descuentoProducto" + index + "").value;
-            ventaProducto.push(ventaProduct);
+        console.log("venta");
+        console.log(venta);
+        let presupuesto ={
+            idPresupuesto: null,
+            examenVista: examenesVista[document.getElementById("selectEV").value],
+            clave: "OQ-PSTLC-"+timestamp
+        };
+        let presupuestoLentesdeContacto;
+        let ventaPresupuestoLC;
+        console.log(presupuesto);
+        let listaVentaPresupuestoLC = [];
+        console.log("lcencompra");
+        console.log(lentesDeContactoEnCompra);
+        lentesDeContactoEnCompra.forEach(function (lc,index){
+            presupuestoLentesdeContacto ={
+            idPresupuestoLentesContacto: null,
+            examenVista: examenesVista[document.getElementById("selectEV").value],
+            lenteContacto: lc,
+            presupuesto: presupuesto,
+            clave: "OQ-PSTLC-"+ timestamp
+        };
+        console.log("presupuestoLC");
+        console.log(presupuestoLentesdeContacto);
+            ventaPresupuestoLC ={
+                venta: venta,
+                presupuestoLC: presupuestoLentesdeContacto,
+                cantidad: document.getElementById("cantidadLC" + index).value,
+                precioUnitario: lc.producto.precioVenta,
+                descuento: document.getElementById("descuentoLC" + index).value
+            };
+            listaVentaPresupuestoLC.push(ventaPresupuestoLC);
         });
-        let datosVP =
-                {
-                    venta: venta,
-                    listaProductos: ventaProducto
-                };
+        let detalleVPreLC ={
+            venta: venta,
+            ventaPresupuestosLC: listaVentaPresupuestoLC
+        };
         let lastToken = localStorage.getItem("lastToken");
         datos = {
-            datosVP: JSON.stringify(datosVP),
+            datosVPLC: JSON.stringify(detalleVPreLC),
             token: lastToken
         };
         param = new URLSearchParams(datos);
         console.log(datos);
         console.log(param);
-        fetch("api/venta_producto/createVentaP",
+        fetch("api/ventaPresupuesto/createVentaPLC",
                 {
                     method: "POST",
                     headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
@@ -412,7 +437,7 @@ export function agregarVentaPresupuestoLC()
                         Swal.fire('',
                                 'Error interno del servidor. Intente nuevamente mas tarde.',
                                 'error');
-                        limpiarCampos();
+                        limpiar();
                         return;
                     }
                     if (data.error != null)
@@ -431,11 +456,8 @@ export function agregarVentaPresupuestoLC()
                         Swal.fire('Realizado', data.response, 'success');
                     }
                     //alert('cargando tabla despues del fetch...');
-                    buscarEmpleado();
+                    buscarCliente();
                     limpiar();
-                    actualizarTablaVenta();
-                    actualizarBotones();
-                    lentesDeContactoEnCompra.splice(0, lentesDeContactoEnCompra.length);
                 });
     }
 }
@@ -505,10 +527,9 @@ export function limpiar()
 {
     console.log(lentesDeContactoEnCompra);
     lentesDeContactoEnCompra.splice(0, lentesDeContactoEnCompra.length);
-    actualizarTablaVenta();
+    actualizarTablaLC();
     clienteSeleccionado = null;
     cargarClienteSeleccionado();
-    refrescarTabla();
     buscarCliente();
     actualizarBotones();
     actualizarTotalVenta();

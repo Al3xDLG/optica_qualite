@@ -26,10 +26,10 @@ import java.util.List;
 @Path("mica")
 public class RESTTipoMica {
 
-    @GET
+    @POST
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("filtro") @DefaultValue("") String filtro) {
+    public Response getAll(@FormParam("filtro") @DefaultValue("") String filtro) {
         String out = null;
         ControllerTipoMica ctm = null;
         List<TipoMica> tiposMicas = null;

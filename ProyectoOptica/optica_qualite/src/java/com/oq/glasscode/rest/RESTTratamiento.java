@@ -26,11 +26,11 @@ import java.util.List;
 @Path("tratamiento")
 public class RESTTratamiento {
 
-    @GET
+    @POST
     @Path("getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("filtro") @DefaultValue("") String filtro,
-                           @QueryParam("showDeleted") @DefaultValue("false") boolean showDeleted) {
+    public Response getAll(@FormParam("filtro") @DefaultValue("") String filtro,
+                           @FormParam("showDeleted") @DefaultValue("false") boolean showDeleted) {
         String out = null;
         ControllerTratamiento ct = null;
         List<Tratamiento> tratamientos = null;

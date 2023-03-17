@@ -32,7 +32,7 @@ public class ControllerVentaPresupuesto {
             // Se inserta la venta
             String query1 = "INSERT INTO venta (idEmpleado, clave) "
                     + "VALUES (" + dvp.getVenta().getEmpleado().getIdEmpleado()
-                    + ',' + dvp.getVenta().getClave() + ");";
+                    + ",'" + dvp.getVenta().getClave() + "');";
             stmnt.execute(query1);
             // Se obtiene el id de la venta que se ha insertado
             String query2 = "SELECT LAST_INSERT_ID()";
@@ -41,30 +41,31 @@ public class ControllerVentaPresupuesto {
                 dvp.getVenta().setIdVenta(rs.getInt(1));
             }
 
-            for (int i = 0; i < dvp.getVentaPresupuesto().size(); i++) {
+            for (int i = 0; i < dvp.getVentaPresupuestosLC().size(); i++) {
                 //Se inserta el presupuesto
                 String query3 = "INSERT INTO presupuesto"
                         + "(idExamenVista, clave)"
-                        + "VALUES (" + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getExamenVista().getIdExamenVista()
-                        + "," + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getPresupuesto().getClave() + " );";
+                        + "VALUES (" + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getExamenVista().getIdExamenVista()
+                        + ",'" + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getPresupuesto().getClave() + " ');";
                 stmnt.execute(query3);
                 //Se obtiene el id del presupuesto generado
                 rs = stmnt.executeQuery(query2);
                 if (rs.next()) {
-                    dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getPresupuesto().setIdPresupuesto(rs.getInt(1));
+                    dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getPresupuesto().setIdPresupuesto(rs.getInt(1));
                 }
 
                 //Se inserta en presupuesto_lentescontacto                
                 String query4 = "INSERT INTO presupuesto_lentescontacto"
-                        + "(idExamenVista, idLenteContacto, clave)"
-                        + "VALUES (" + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getExamenVista().getIdExamenVista() + ","
-                        + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getLenteContacto().getIdLenteContacto()+ ","
-                        + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getClave() + ");";
+                        + "(idExamenVista, idLenteContacto, idPresupuesto, clave)"
+                        + "VALUES (" + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getExamenVista().getIdExamenVista() + ","
+                        + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getLenteContacto().getIdLenteContacto()+ ", "
+                        + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getPresupuesto().getIdPresupuesto()+ ",'"
+                        + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getClave() + "');";
                 stmnt.execute(query4);
                 //Se obtiene el id del presupuesto_lentescontacto generado
                 rs = stmnt.executeQuery(query2);
                 if (rs.next()) {
-                    dvp.getVentaPresupuesto().get(i).getPresupuestoLC().setIdPrespuestoLentesContacto(rs.getInt(1));
+                    dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().setIdPrespuestoLentesContacto(rs.getInt(1));
                 }
 
                 //Se insera en venta_presupuesto la relación entre la venta y el presupuesto
@@ -72,10 +73,10 @@ public class ControllerVentaPresupuesto {
                         + "(idVenta, idPresupuesto, cantidad, precioUnitario, descuento) "
                         + "VALUES ("
                         + dvp.getVenta().getIdVenta() + ","
-                        + dvp.getVentaPresupuesto().get(i).getPresupuestoLC().getPresupuesto().getIdPresupuesto() + ","
-                        + dvp.getVentaPresupuesto().get(i).getCantidad() + ","
-                        + dvp.getVentaPresupuesto().get(i).getPrecioUnitario() + ","
-                        + dvp.getVentaPresupuesto().get(i).getDescuento()+ ");";
+                        + dvp.getVentaPresupuestosLC().get(i).getPresupuestoLC().getPresupuesto().getIdPresupuesto() + ","
+                        + dvp.getVentaPresupuestosLC().get(i).getCantidad() + ","
+                        + dvp.getVentaPresupuestosLC().get(i).getPrecioUnitario() + ","
+                        + dvp.getVentaPresupuestosLC().get(i).getDescuento()+ ");";
                 stmnt.execute(query5);
             }
             conn.commit();

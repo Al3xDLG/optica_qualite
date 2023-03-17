@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class DetalleVPreLC {
     private Venta venta;
-    private List<VentaPresupuestoLC> ventaPresupuesto;
+    private List<VentaPresupuestoLC> ventaPresupuestosLC;
 
     public DetalleVPreLC() {
     }
 
     public DetalleVPreLC(Venta venta, List<VentaPresupuestoLC> listaVPre) {
         this.venta = venta;
-        this.ventaPresupuesto = listaVPre;
+        this.ventaPresupuestosLC = listaVPre;
     }
 
     public Venta getVenta() {
@@ -30,24 +30,24 @@ public class DetalleVPreLC {
         this.venta = venta;
     }
 
-    public List<VentaPresupuestoLC> getVentaPresupuesto() {
-        return ventaPresupuesto;
+    public List<VentaPresupuestoLC> getVentaPresupuestosLC() {
+        return ventaPresupuestosLC;
     }
 
-    public void setVentaPresupuesto(List<VentaPresupuestoLC> ventaPresupuesto) {
-        this.ventaPresupuesto = ventaPresupuesto;
+    public void setVentaPresupuestosLC(List<VentaPresupuestoLC> ventaPresupuestosLC) {
+        this.ventaPresupuestosLC = ventaPresupuestosLC;
     }
 
     @Override
     public String toString() {
         String mensaje="";
-        for (VentaPresupuestoLC listaPresupuesto : ventaPresupuesto) {
+        for (VentaPresupuestoLC listaPresupuesto : ventaPresupuestosLC) {
             mensaje += listaPresupuesto.toString();
         }
         StringBuilder sb = new StringBuilder();
         sb.append("DetalleVPre{");
         sb.append("venta=").append(venta);
-        sb.append(", listaVPre=").append(ventaPresupuesto);
+        sb.append(", listaVPre=").append(ventaPresupuestosLC);
         sb.append('}');
         return sb.toString();
     }

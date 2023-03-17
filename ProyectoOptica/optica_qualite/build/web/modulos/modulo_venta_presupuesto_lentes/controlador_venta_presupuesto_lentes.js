@@ -6,6 +6,7 @@ let materiales;
 let tratamientos;
 let examenesVista;
 let clienteSeleccionado;
+let tratamientosSeleccionados = [];
 let armazones;
 const header = document.getElementById("headerLentesDeContacto");
 console.log(header);
@@ -15,12 +16,15 @@ console.log("Hola");
 export function inicializar() {
     buscarCliente();
     buscarArmazon();
+    buscarMaterial();
+    buscarTipoMica();
+    buscarTratamientos();
     mostrarCampoBusquedaClientes();
     document.getElementById("btnClean").disabled = true;
     document.getElementById("btnSave").disabled = true;
 
-    document.getElementById("btnCleanLentes").disabled = true;
-    document.getElementById("btnSaveLentes").disabled = true;
+    document.getElementById("btnCleanPresupuesto").disabled = true;
+    document.getElementById("btnSavePresupuesto").disabled = true;
     configureTableFilter(document.getElementById('txtBusquedaClientes'),
             tbl);
 }
@@ -126,7 +130,7 @@ export function cargarClientes(data)
                 "<td>" + cliente.persona.apellidoMaterno + "</td>" +
                 "<td>" + cliente.persona.telMovil + "</td>" +
                 "<td>" + cliente.persona.email + "</td>" +
-                "<td><a onclick='moduloVentaPresupuestoLC.seleccionarCliente(" + index + ");'><i class='fa fa-plus-square'></i></a></td></tr>";
+                "<td><a onclick='moduloVentaPresupuestoLentes.seleccionarCliente(" + index + ");'><i class='fa fa-plus-square'></i></a></td></tr>";
         contenido += registro;
     });
     document.getElementById("tblClientes").innerHTML = contenido;
@@ -265,6 +269,235 @@ export function cargarEV(data)
     select.innerHTML = contenido;
 }
 
+export function buscarTipoMica()
+{
+    let param = null;
+    let lastToken = localStorage.getItem("lastToken");
+    let rol = localStorage.getItem("rol");
+    let datos;
+    param = new URLSearchParams(datos);
+    console.log(param);
+    fetch("api/mica/getAll",
+            {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+                body: param
+            }).then(response => {
+        return response.json();
+    })
+            .then(function (data)
+            {
+                if (data.exception != null)
+                {
+                    Swal.fire('',
+                            'Error interno del servidor. Intente nuevamente mas tarde.',
+                            'error');
+                    return;
+                }
+                if (data.error != null)
+                {
+                    Swal.fire('', data.error, 'warning');
+                    return;
+                }
+                if (data.errorperm != null) {
+                    Swal.fire('Error', data.errorperm, 'error');
+                    return;
+                }
+                if (data.errorsec != null)
+                {
+                    localStorage.clear();
+                    Swal.fire({
+                        title: 'Token incorrecto',
+                        text: data.errorsec,
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Iniciar sesion'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log(data);
+                            alert("consola");
+                            window.location = "index.html";
+                        }
+                    });
+                    return;
+                }
+                console.log("cargando examenes vista...");
+                console.log(data);
+                cargarTipoMica(data);
+            });
+}
+
+export function cargarTipoMica(data)
+{
+    tiposMica = data;
+    console.log(tiposMica);
+    let select = document.getElementById("selectMica");
+    let options = select.getElementsByTagName('option');
+    for (var i = 0; i < options.length; i++) {
+        select.removeChild(options[i]);
+        i--;
+    }
+    let contenido = "<option value='seleccionarMica' selected='' disabled=''>Selecciona el tipo de mica</option>";
+    tiposMica.forEach(function (tm, index) {
+        let registro = "<option value='" + index + "'>" + tm.nombre + "</option>";
+        contenido += registro;
+    });
+    select.innerHTML = contenido;
+}
+
+export function buscarTratamientos()
+{
+    let param = null;
+    let lastToken = localStorage.getItem("lastToken");
+    let rol = localStorage.getItem("rol");
+    let datos;
+    param = new URLSearchParams(datos);
+    console.log(param);
+    fetch("api/tratamiento/getAll",
+            {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+                body: param
+            }).then(response => {
+        return response.json();
+    })
+            .then(function (data)
+            {
+                if (data.exception != null)
+                {
+                    Swal.fire('',
+                            'Error interno del servidor. Intente nuevamente mas tarde.',
+                            'error');
+                    return;
+                }
+                if (data.error != null)
+                {
+                    Swal.fire('', data.error, 'warning');
+                    return;
+                }
+                if (data.errorperm != null) {
+                    Swal.fire('Error', data.errorperm, 'error');
+                    return;
+                }
+                if (data.errorsec != null)
+                {
+                    localStorage.clear();
+                    Swal.fire({
+                        title: 'Token incorrecto',
+                        text: data.errorsec,
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Iniciar sesion'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log(data);
+                            alert("consola");
+                            window.location = "index.html";
+                        }
+                    });
+                    return;
+                }
+                console.log("cargando tratamientos...");
+                console.log(data);
+                cargarTratamientos(data);
+            });
+}
+
+export function cargarTratamientos(data)
+{
+    tratamientos = data;
+    console.log(tratamientos);
+    let div = document.getElementById("divTratamientos");
+    let contenido = "<div class='row'>";
+    tratamientos.forEach(function (tt, index) {
+        
+        let registro =   "<div class='col-sm-3 elementoForm'>"
+                        +"<input type='checkbox' class='form-check-input chbTratamiento' oncheck='moduloVentaPresupuestoLentes.actualizarBotonesPresupuesto();' value='"+index+"' id='chb"+tt.nombre+"'>"
+                        +"<label class='form-check-label' for='chbTratamiento"+index+"' class='form-label'> "+ tt.nombre + "</label>"
+                        +"</div>";
+        
+        contenido += registro;
+    });
+    contenido += "</div>";
+    div.innerHTML = contenido;
+}
+
+export function buscarMaterial()
+{
+    let param = null;
+    let lastToken = localStorage.getItem("lastToken");
+    let rol = localStorage.getItem("rol");
+    let datos;
+    param = new URLSearchParams(datos);
+    console.log(param);
+    fetch("api/material/getAll",
+            {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+                body: param
+            }).then(response => {
+        return response.json();
+    })
+            .then(function (data)
+            {
+                if (data.exception != null)
+                {
+                    Swal.fire('',
+                            'Error interno del servidor. Intente nuevamente mas tarde.',
+                            'error');
+                    return;
+                }
+                if (data.error != null)
+                {
+                    Swal.fire('', data.error, 'warning');
+                    return;
+                }
+                if (data.errorperm != null) {
+                    Swal.fire('Error', data.errorperm, 'error');
+                    return;
+                }
+                if (data.errorsec != null)
+                {
+                    localStorage.clear();
+                    Swal.fire({
+                        title: 'Token incorrecto',
+                        text: data.errorsec,
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Iniciar sesion'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log(data);
+                            alert("consola");
+                            window.location = "index.html";
+                        }
+                    });
+                    return;
+                }
+                console.log("cargando examenes vista...");
+                console.log(data);
+                cargarMaterial(data);
+            });
+}
+
+export function cargarMaterial(data)
+{
+    materiales = data;
+    console.log(tiposMica);
+    let select = document.getElementById("selectMaterial");
+    let options = select.getElementsByTagName('option');
+    for (var i = 0; i < options.length; i++) {
+        select.removeChild(options[i]);
+        i--;
+    }
+    let contenido = "<option value='seleccionarMaterial' selected='' disabled=''>Selecciona el material</option>";
+    materiales.forEach(function (material, index) {
+        let registro = "<option value='" + index + "'>" + material.nombre + "</option>";
+        contenido += registro;
+    });
+    select.innerHTML = contenido;
+}
+
 export function buscarArmazon()
 {
     let param = null;
@@ -327,13 +560,13 @@ export function buscarArmazon()
 export function cargarArmazones(data)
 {
     armazones = data;
-    let select = document.getElementById("selectArmazones");
+    let select = document.getElementById("selectArmazon");
     let options = select.getElementsByTagName('option');
     for (var i = 0; i < options.length; i++) {
         select.removeChild(options[i]);
         i--;
     }
-    let contenido = "<option value='SeleccionarArmazon' selected='' disabled=''>Selecciona el armazon</option>";
+    let contenido = "<option value='seleccionarArmazon' selected='' disabled=''>Selecciona el armazon</option>";
     armazones.forEach(function (armazon, index) {
         let registro = "<option value='" + index + "'>" + armazon.producto.nombre + "</option>";
         contenido += registro;
@@ -433,7 +666,6 @@ export function guardarPresupuesto()
 {
     let alturaOblea = document.getElementById("txtAlturaOblea").value;
     let tipoMica = tiposMica[document.getElementById("selectMica").value];
-    let tratamientosSeleccionados = [];
     let listaTratamientos = document.getElementsByName("chbTratamiento");
     for (var tratamiento in listaTratamientos) {
         if (tratamiento.checked) {
@@ -443,7 +675,7 @@ export function guardarPresupuesto()
     
     let presupuesto =
             {
-                idPresupuesto = 0,
+                idPresupuesto: 0,
                 clave: "",
                 examenVista: examenesVista[document.getElementById("selectEV").value]
             };
@@ -452,7 +684,7 @@ export function guardarPresupuesto()
                 idPresupuestoLentes: 0,
                 tipoMica: tipoMica,
                 material: material,
-                tratamientos: listaTratamientos,
+                tratamientos: tratamientosSeleccionados,
                 alturaOblea: alturaOblea,
                 armazon: armazonSeleccionado,
                 presupuesto: presupuesto
@@ -462,20 +694,50 @@ export function guardarPresupuesto()
     limpiarCamposPresupuesto();
 
 }
+
+export function actualizarTablaPresupuesto()
+{
+    let contenido = "";
+    if (DetalleVentaPresupuestoLentes[0] != null) {
+        DetalleVentaPresupuestoLentes.forEach(function (presupuesto, index) {
+            let registro =
+                    "<tr>" +
+                    "<td>" + presupuesto.armazon.producto.nombre + "</td>" +
+                    "<td>" + presupuesto.tipoMica.nombre + "</td>" +
+                    "<td> $" + presupuesto.producto.precioVenta + "</td>" +
+                    "<td> <input type='number' id='cantidadPresupuesto" + index + "' value='1' name='cantidadPresupuesto" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();'  min='1' max='" + presupuesto.producto.existencias + "'></td>" +
+                    "<td> <input type='number' id='descuentoPresupuesto" + index + "' value='0' name='descuentoPresupuesto" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();' max='100'</td>" +
+                    "<td><a onclick='moduloVentaPresupuestoLentes.eliminarPresupuesto(" + index + ");'><i class='fa-sharp fa-solid fa-trash'></i></a></td></tr>";
+            contenido += registro;
+        });
+        console.log(armazones);
+        document.getElementById("tblVentaPresupuestoLentes").innerHTML = contenido;
+        document.getElementById("totalVenta").style.display = "block";
+        actualizarBotones();
+        actualizarTotalVenta();
+        setDetalleVisible(false);
+    } else
+    {
+        document.getElementById("totalVenta").style.display = "none";
+        setDetalleVisible(false);
+    }
+
+}
+
 export function limpiarCamposPresupuesto()
 {
-    document.getElementById("selectArmazon").value = "SeleccionarArmazon";
-    document.getElementById("selectMaterial").value = "SeleccionarMaterial";
-    document.getElementById("selectMica").value = "SeleccionarMica";
-    document.getElementById("selectTratamiento").value = "SeleccionarTratamiento";
-    let tratamientos = document.getElementsByName("chbTratamiento");
+    document.getElementById("selectArmazon").value = "seleccionarArmazon";
+    document.getElementById("selectMaterial").value = "seleccionarMaterial";
+    document.getElementById("selectMica").value = "seleccionarMica";
+    let tratamientos = document.getElementsByClassName("chbTratamiento");
+    console.log(tratamientos);
     for (var tratamiento in tratamientos) {
-        tratamiento.checked = false;
+        if (tratamiento.checked) {
+           tratamiento.checked = false; 
+        }
     }
-    document.getElementById("txtPrecioUnitario").value = "";
-
-    document.getElementById("txtCantidad").disabled = true;
-    document.getElementById("txtDescuento").disabled = true;
+    
+    document.getElementById("txtAlturaOblea").value = 0;
 
     document.getElementById("btnSavePresupuesto").disabled = true;
     document.getElementById("btnCleanPresupuesto").disabled = true;
@@ -512,6 +774,33 @@ export function actualizarBotones()
         document.getElementById("btnSave").disabled = true;
     }
 }
+
+export function actualizarBotonesPresupuesto()
+{
+    let materialSeleccionada = document.getElementById("selectMaterial").value;
+    let armazonSelected = document.getElementById("selectArmazon").value;
+    let micaSeleccionada = document.getElementById("selectMica").value;
+    let alturaOblea = parseInt(document.getElementById("txtAlturaOblea").value);
+    let tratamientos = document.getElementsByClassName("chbTratamiento");
+    let selected;
+    for (var tratamiento in tratamientos) {
+        if(tratamiento.checked){
+            selected = true;
+            return;
+        }
+    }
+    if (materialSeleccionada != null || armazonSelected != null || micaSeleccionada != null || selected)
+    {
+        document.getElementById("btnCleanPresupuesto").disabled = false;
+        if (materialSeleccionada != null && armazonSelected != null && micaSeleccionada != null && clienteSeleccionado != null && document.getElementById("selectEV").value != "seleccionaExamen" && selected) {
+            document.getElementById("btnSavePresupuesto").disabled = false;
+        }
+    } else
+    {
+        document.getElementById("btnCleanPresupuesto").disabled = true;
+        document.getElementById("btnSavePresupuesto").disabled = true;
+    }
+}
 /**
  * Agrega a la tabla de detalles de la compra un renglon, segun el producto que se haya elegido de la tabla
  * de productos
@@ -523,34 +812,6 @@ export function actualizarBotones()
  * registrados en la optica
  * @returns {undefined}
  */
-export function actualizarTablaPresupuestoLentes()
-{
-    let contenido = "";
-    if (DetalleVentaPresupuestoLentes[0] != null) {
-        DetalleVentaPresupuestoLentes.forEach(function (armazon, index) {
-            let registro =
-                    "<tr>" +
-                    "<td>" + armazon.producto.codigoBarras + "</td>" +
-                    "<td>" + armazon.producto.nombre + "</td>" +
-                    "<td> $" + armazon.producto.precioVenta + "</td>" +
-                    "<td> <input type='number' id='cantidadLente" + index + "' value='1' name='cantidadLente" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();'  min='1' max='" + armazon.producto.existencias + "'></td>" +
-                    "<td> <input type='number' id='descuentoLente" + index + "' value='0' name='descuentoLente" + index + "' oninput='moduloVentaPresupuestoLentes.actualizarTotalVenta();' max='100'</td>" +
-                    "<td><a onclick='moduloVentaPresupuestoLC.eliminarLC(" + index + ");'><i class='fa-sharp fa-solid fa-trash'></i></a></td></tr>";
-            contenido += registro;
-        });
-        console.log(armazones);
-        document.getElementById("tblVentaPresupuestoLentes").innerHTML = contenido;
-        document.getElementById("totalVenta").style.display = "block";
-        actualizarBotones();
-        actualizarTotalVenta();
-        setDetalleVisible(false);
-    } else
-    {
-        document.getElementById("totalVenta").style.display = "none";
-        setDetalleVisible(false);
-    }
-
-}
 
 export function actualizarTotalVenta()
 {
@@ -705,15 +966,17 @@ export function validarExistencias() {
 
 export function validarDescuento() {
     let valid = true;
-    armazones.forEach(function (lc, index) {
-        let id = document.getElementById("descuentoLC" + index);
+    DetalleVentaPresupuestoLentes.forEach(function (presupuesto, index) {
+        let id = document.getElementById("descuentoPresupuesto" + index);
         let descuento = parseFloat(id.value);
+        let total = presupuesto.armazon.producto.precioVenta + presupuesto.tipoMica.precioVenta + presupuesto.material.precioVenta;
+        
         if (Number.isNaN(descuento)) {
             notificacion(id, "Ingrese una cantidad válida");
             id.focus();
             valid = false;
         } else
-        if (descuento > ((lc.producto.precioVenta * document.getElementById("cantidadLC" + index).value) / 2)) {
+        if (descuento > ((presupuesto.armazon.producto.precioVenta * document.getElementById("cantidadLC" + index).value) / 2)) {
             notificacion(id, "El descuento supera al maximo descuento (50%)");
             id.focus();
             valid = false;
